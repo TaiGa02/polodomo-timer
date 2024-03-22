@@ -2,26 +2,25 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 
 function App() {
-
   const [angle, setAngle] = useState(0);
   const shapeRef = React.useRef(null);
+  const animationRef = React.useRef(null);
 
   useEffect(() => {
     const shape = shapeRef.current;
 
     function drawCircle() {
       if (angle < 365) {
-        setAngle((prevAngle) => prevAngle + 0.1);
+        setAngle((preAngle) => preAngle + 0.1);
         shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
-        requestAnimationFrame(drawCircle);
+        animationRef.current = requestAnimationFrame(drawCircle);
       }
     }
-
-    requestAnimationFrame(drawCircle);
+    animationRef.current = requestAnimationFrame(drawCircle);
 
     return () => {
-      cancelAnimationFrame(drawCircle);
-    };
+      cancelAnimationFrame(animationRef.current);
+    }
   }, [angle]);
 
   return (
