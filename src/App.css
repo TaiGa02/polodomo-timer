@@ -25,3 +25,14 @@
 .timer-content {
   text-align: center;
 }
+
+.shape {
+  background-image: conic-gradient(blue 45deg, white 45deg);
+  clip-path: circle();
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

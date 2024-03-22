@@ -1,6 +1,29 @@
 import './App.css';
+import React, { useState, useEffect } from 'react';
 
 function App() {
+
+  const [angle, setAngle] = useState(0);
+  const shapeRef = React.useRef(null);
+
+  useEffect(() => {
+    const shape = shapeRef.current;
+
+    function drawCircle() {
+      if (angle < 365) {
+        setAngle((prevAngle) => prevAngle + 0.1);
+        shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
+        requestAnimationFrame(drawCircle);
+      }
+    }
+
+    requestAnimationFrame(drawCircle);
+
+    return () => {
+      cancelAnimationFrame(drawCircle);
+    };
+  }, [angle]);
+
   return (
     <>
       <div className="App">
@@ -20,10 +43,12 @@ function App() {
             <div className="mt-10 ">
               {/* タイマー用 */}
               <div className="outer-Timer">
-                <div className="inner-circul">
-                  <div className="timer-content">
-                    <p className="text-slate-100 text-9xl font-extrabold">20</p>
-                    <p className="text-slate-100 text-9xl font-extrabold">00</p>
+                <div className="shape" ref={shapeRef}>
+                  <div className="inner-circul">
+                    <div className="timer-content">
+                      <p className="text-slate-100 text-9xl font-extrabold">20</p>
+                      <p className="text-slate-100 text-9xl font-extrabold">00</p>
+                    </div>
                   </div>
                 </div>
               </div>
