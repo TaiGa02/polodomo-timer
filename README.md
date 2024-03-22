@@ -28,3 +28,46 @@
 - タイマーページ（メニューバー、時間調節込み）
 - マイページ（グラフを閲覧できる　＋メニューバー）
 - 共有ページ（ポモドーロのグラフの投稿、共有ページ　＋メニューバー）
+
+
+##### 開発黙示録
+- タイマーのデザインに外側の円と内側の円は用いてデザイン
+- タイマーのアニメーションにshapeとクラス名を付けた円を外側の円と同じサイズで設置
+```
+.shape {
+  background-image: conic-gradient(blue 45deg, white 45deg);
+  clip-path: circle();
+  width: 400px;
+  height: 400px;
+  border-radius: 50%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+```
+- 扇形を上記のコードで作成
+- javascriptで角度を埋めていく
+```
+  const [angle, setAngle] = useState(0);
+  const shapeRef = React.useRef(null);
+
+  useEffect(() => {
+    const shape = shapeRef.current;
+
+    function drawCircle() {
+      if (angle < 365) {
+        setAngle((prevAngle) => prevAngle + 0.1);
+        shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
+        requestAnimationFrame(drawCircle);
+      }
+    }
+
+    requestAnimationFrame(drawCircle);
+
+    return () => {
+      cancelAnimationFrame(drawCircle);
+    };
+  }, [angle]);
+```
+- 再帰が止まらずフリーズが起こった
+
