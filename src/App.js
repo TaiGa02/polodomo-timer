@@ -5,23 +5,34 @@ function App() {
   const [angle, setAngle] = useState(0);
   const shapeRef = React.useRef(null);
   const animationRef = React.useRef(null);
+  const [start, setStart] = useState(false);
 
   useEffect(() => {
-    const shape = shapeRef.current;
+    //start属性がtrueの時にタイマーのゲージが描画される
+    if (start) {
+      const shape = shapeRef.current;
 
-    function drawCircle() {
-      if (angle < 365) {
-        setAngle((preAngle) => preAngle + 0.1);
-        shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
-        animationRef.current = requestAnimationFrame(drawCircle);
+      function drawCircle() {
+        if (angle < 365) {
+          setAngle((preAngle) => preAngle + 0.1);
+          shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
+          animationRef.current = requestAnimationFrame(drawCircle);
+        }
       }
+      animationRef.current = requestAnimationFrame(drawCircle);
     }
-    animationRef.current = requestAnimationFrame(drawCircle);
 
     return () => {
       cancelAnimationFrame(animationRef.current);
     }
-  }, [angle]);
+  }, [angle, start]);
+
+  const handleStart = () => {
+    setStart(true);
+  };
+  const handleStop = () => {
+    setStart(false);
+  };
 
   return (
     <>
@@ -54,8 +65,8 @@ function App() {
             </div>
             <div className="my-5 justify-around flex">
               {/* スタートストップ用 */}
-              <button>Start</button>
-              <button>Stop</button>
+              <button onClick={handleStart}>Start</button>
+              <button onClick={handleStop}>Stop</button>
             </div>
             <div className="my-5">
               {/* 設定ボタン用 */}
