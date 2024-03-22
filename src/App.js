@@ -1,8 +1,26 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 
+function timer(minute, second) {
+  let intSecond = parseInt(second, 10);
+  let intMinute = parseInt(minute, 10);
+  if (intSecond == 0 && intMinute == 0) {
+    return true;
+  }
+  if (intSecond == 0 && intMinute != 0) {
+    intSecond = 59;
+    intMinute -= 1;
+  } else {
+    intSecond -= 1;
+  }
+
+  return [intMinute.toString().padStart(2, '0'), intSecond.toString().padStart(2, '0')];
+}
+
 function App() {
   const [angle, setAngle] = useState(0);
+  const [time, setTime] = useState("02");
+  const [second, setSecond] = useState("00");
   const shapeRef = React.useRef(null);
   const animationRef = React.useRef(null);
   const [start, setStart] = useState(false);
@@ -14,7 +32,8 @@ function App() {
 
       function drawCircle() {
         if (angle < 365) {
-          setAngle((preAngle) => preAngle + 0.1);
+          //0.1で1周に60秒かかる
+          setAngle((preAngle) => preAngle + 0.05);
           shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
           animationRef.current = requestAnimationFrame(drawCircle);
         }
@@ -26,6 +45,27 @@ function App() {
       cancelAnimationFrame(animationRef.current);
     }
   }, [angle, start]);
+
+  useEffect(() => {
+    let intervalId = null;
+    if (start) {
+      intervalId = setInterval(() => {
+        const isStop = timer(time, second);
+        if (isStop === true) {
+          handleStop();
+          clearInterval(intervalId);
+        }
+        else {
+          const [newTime, newSecond] = isStop;
+          setTime(newTime);
+          setSecond(newSecond);
+        }
+      }, 1000);
+    }
+    return () => {
+      clearInterval(intervalId);
+    }
+  }, [time, second, start]);
 
   const handleStart = () => {
     setStart(true);
@@ -56,8 +96,8 @@ function App() {
                 <div className="shape" ref={shapeRef}>
                   <div className="inner-circul">
                     <div className="timer-content">
-                      <p className="text-slate-100 text-9xl font-extrabold">20</p>
-                      <p className="text-slate-100 text-9xl font-extrabold">00</p>
+                      <p className="text-slate-100 text-9xl font-extrabold">{time}</p>
+                      <p className="text-slate-100 text-9xl font-extrabold">{second}</p>
                     </div>
                   </div>
                 </div>
