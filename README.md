@@ -70,4 +70,29 @@
   }, [angle]);
 ```
 - 再帰が止まらずフリーズが起こった
+```
+  const [angle, setAngle] = useState(0);
+  const shapeRef = React.useRef(null);
+//アニメーションフレームの識別子を保持するためのanimationRefを追加
+  const animationRef = React.useRef(null);
 
+  useEffect(() => {
+    const shape = shapeRef.current;
+
+    function drawCircle() {
+      if (angle < 365) {
+        setAngle((preAngle) => preAngle + 0.1);
+        shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
+//アニメーションフレームにrequestを格納する
+        animationRef.current = requestAnimationFrame(drawCircle);
+      }
+    }
+//アニメーション開始
+    animationRef.current = requestAnimationFrame(drawCircle);
+
+    return () => {
+      cancelAnimationFrame(animationRef.current);
+    }
+  }, [angle]);
+```
+-これで解決できた。
