@@ -20,6 +20,8 @@ function timer(minute, second) {
 function App() {
   const [angle, setAngle] = useState(0);
   const [time, setTime] = useState("02");
+  const [shortRest, setShortRest] = useState("05");
+  const [isRest, setIsRest] = useState(false);
   const [second, setSecond] = useState("00");
   const shapeRef = React.useRef(null);
   const animationRef = React.useRef(null);
@@ -29,13 +31,22 @@ function App() {
     //start属性がtrueの時にタイマーのゲージが描画される
     if (start) {
       const shape = shapeRef.current;
+      const focusPace = 0.1 / parseInt(time, 10);
+      const shortRestPace = 0.1 / parseInt(shortRest, 10);
 
       function drawCircle() {
         if (angle < 365) {
-          //0.1で1周に60秒かかる
-          setAngle((preAngle) => preAngle + 0.05);
-          shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
-          animationRef.current = requestAnimationFrame(drawCircle);
+          if (!isRest) {
+            //0.1で1周に60秒かかる
+            setAngle((preAngle) => preAngle + focusPace);
+            shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
+            animationRef.current = requestAnimationFrame(drawCircle);
+          }
+          else if (isRest) {
+            setAngle((preAngle) => preAngle + shortRestPace);
+            shape.style.backgroundImage = `conic-gradient(red ${angle}deg, white ${angle}deg)`;
+            animationRef.current = requestAnimationFrame(drawCircle);
+          }
         }
       }
       animationRef.current = requestAnimationFrame(drawCircle);
@@ -54,6 +65,8 @@ function App() {
         if (isStop === true) {
           handleStop();
           clearInterval(intervalId);
+          setTime(shortRest);
+          setIsRest(true);
         }
         else {
           const [newTime, newSecond] = isStop;
@@ -68,6 +81,9 @@ function App() {
   }, [time, second, start]);
 
   const handleStart = () => {
+    if (isRest) {
+      setAngle(0);
+    }
     setStart(true);
   };
   const handleStop = () => {
@@ -77,7 +93,7 @@ function App() {
   return (
     <>
       <div className="App">
-        <div className="bg-blue-400 h-screen w-screen flex flex-col justify-center items-center">
+        <div className={`${isRest ? `bg-red-400` : `bg-blue-400`} h-screen w-screen flex flex-col justify-center items-center`}>
           <nav className="bg-blue-500 sticky top-0 z-50 w-full mb-20">
             <div className="mx-auto px-2 md:px-6 lg:px-8 flex justify-between items-center">
               <div>
