@@ -31,19 +31,17 @@ function App() {
     //start属性がtrueの時にタイマーのゲージが描画される
     if (start) {
       const shape = shapeRef.current;
-      const focusPace = 0.1 / parseInt(time, 10);
-      const shortRestPace = 0.1 / parseInt(shortRest, 10);
 
       function drawCircle() {
         if (angle < 365) {
           if (!isRest) {
             //0.1で1周に60秒かかる
-            setAngle((preAngle) => preAngle + focusPace);
+            setAngle((preAngle) => preAngle + 0.05);
             shape.style.backgroundImage = `conic-gradient(blue ${angle}deg, white ${angle}deg)`;
             animationRef.current = requestAnimationFrame(drawCircle);
           }
           else if (isRest) {
-            setAngle((preAngle) => preAngle + shortRestPace);
+            setAngle((preAngle) => preAngle + 0.02);
             shape.style.backgroundImage = `conic-gradient(red ${angle}deg, white ${angle}deg)`;
             animationRef.current = requestAnimationFrame(drawCircle);
           }
