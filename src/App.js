@@ -31,6 +31,9 @@ function App() {
     //start属性がtrueの時にタイマーのゲージが描画される
     if (start) {
       const shape = shapeRef.current;
+      //focusPaceを計算した結果をangleの変化に入れると、タイマーのゲージの描画が速くなってしまう(isRestがfalse、1番最初のスタートの時)
+      // const focusPace = 0.1 / parseInt(time, 10);
+      // const shortRestPace = 0.1 / parseInt(shortRest, 10);
 
       function drawCircle() {
         if (angle < 365) {
