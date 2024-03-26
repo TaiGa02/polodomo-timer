@@ -4,10 +4,10 @@ import React, { useState, useEffect } from 'react';
 function timer(minute, second) {
   let intSecond = parseInt(second, 10);
   let intMinute = parseInt(minute, 10);
-  if (intSecond == 0 && intMinute == 0) {
+  if (intSecond === 0 && intMinute === 0) {
     return true;
   }
-  if (intSecond == 0 && intMinute != 0) {
+  if (intSecond === 0 && intMinute !== 0) {
     intSecond = 59;
     intMinute -= 1;
   } else {
